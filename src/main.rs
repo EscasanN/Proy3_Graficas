@@ -23,21 +23,18 @@ fn main() {
 
     let mut framebuffer = Framebuffer::new(width, height);
     
-    // Ajustamos la posición inicial de la cámara para una mejor vista
     let mut camera = Camera::new(
-        Vec3::new(0.0, 150.0, 400.0),    // Más alejada en Z para ver mejor
-        Vec3::new(0.0, 0.0, 0.0),        // Mirando al centro
-        Vec3::new(0.0, 1.0, 0.0),        // Vector arriba
+        Vec3::new(0.0, 150.0, 400.0),
+        Vec3::new(0.0, 0.0, 0.0),
+        Vec3::new(0.0, 1.0, 0.0),
     );
 
-    // Inicializar el sistema solar con dimensiones más apropiadas
-    let mut solar_system = SolarSystem::new(30.0, 0xFFFF00);  // Sol más grande
+    let mut solar_system = SolarSystem::new(30.0, 0xFFFF00);
     
-    // Ajustamos las órbitas y tamaños de los planetas
-    solar_system.add_planet(Planet::new(150.0, 15.0, 0.8, 2.0, 0x00FF00));  // Verde
-    solar_system.add_planet(Planet::new(250.0, 20.0, 0.6, 1.5, 0x0000FF));  // Azul
-    solar_system.add_planet(Planet::new(350.0, 18.0, 0.4, 1.8, 0xFF0000));  // Rojo
-    solar_system.add_planet(Planet::new(450.0, 12.0, 0.3, 1.8, 0xFF00FF));  // Moradito
+    solar_system.add_planet(Planet::new(150.0, 15.0, 0.8, 2.0, 0x00FF00));
+    solar_system.add_planet(Planet::new(250.0, 20.0, 0.6, 1.5, 0x0000FF));
+    solar_system.add_planet(Planet::new(350.0, 18.0, 0.4, 1.8, 0xFF0000));
+    solar_system.add_planet(Planet::new(450.0, 12.0, 0.3, 1.8, 0xFF00FF));
 
     let mut previous_time = Instant::now();
     let mut mouse_pos = (0.0f32, 0.0f32);
@@ -47,11 +44,9 @@ fn main() {
         let delta_time = current_time.duration_since(previous_time).as_secs_f32();
         previous_time = current_time;
 
-        // Controles de movimiento
         let camera_speed = 100.0 * delta_time;
-        let rotation_speed = 1.5 * delta_time;  // Velocidad de rotación ajustable
+        let rotation_speed = 1.5 * delta_time;
         
-        // Movimiento adelante/atrás
         if window.is_key_down(Key::W) {
             camera.move_forward(camera_speed);
         }
@@ -59,7 +54,6 @@ fn main() {
             camera.move_forward(-camera_speed);
         }
         
-        // Movimiento lateral
         if window.is_key_down(Key::A) {
             camera.move_right(-camera_speed);
         }
@@ -67,7 +61,6 @@ fn main() {
             camera.move_right(camera_speed);
         }
         
-        // Movimiento vertical
         if window.is_key_down(Key::Space) {
             camera.move_up(camera_speed);
         }
@@ -75,7 +68,6 @@ fn main() {
             camera.move_up(-camera_speed);
         }
 
-        // Rotación de la cámara con teclas de flecha
         if window.is_key_down(Key::Left) {
             camera.rotate(-rotation_speed, 0.0);
         }
@@ -89,7 +81,6 @@ fn main() {
             camera.rotate(0.0, rotation_speed);
         }
         
-        // Zoom
         if window.is_key_down(Key::Q) {
             camera.zoom(1.0 + delta_time);
         }

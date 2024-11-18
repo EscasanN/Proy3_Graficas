@@ -40,13 +40,12 @@ impl Planet {
     }
 
     pub fn draw(&self, framebuffer: &mut Framebuffer, camera: &Camera, width: f32, height: f32) {
-        let steps = 32;  // Aumentamos los pasos para un círculo más suave
+        let steps = 32;
         let screen_pos = camera.world_to_screen(&self.position, width, height);
         
         if screen_pos.x >= 0.0 && screen_pos.x < width &&
            screen_pos.y >= 0.0 && screen_pos.y < height {
             
-            // Dibujar el planeta
             for i in 0..steps {
                 let angle = (i as f32 / steps as f32) * 2.0 * PI;
                 let x = screen_pos.x + (self.radius * angle.cos()) * camera.zoom_factor;
@@ -60,12 +59,11 @@ impl Planet {
     }
 
     pub fn draw_orbit(&self, framebuffer: &mut Framebuffer, camera: &Camera, width: f32, height: f32) {
-        let orbit_steps = 64;  // Más pasos para una órbita más suave
-        let orbit_color = 0x444444;  // Color gris para la órbita
+        let orbit_steps = 64;
+        let orbit_color = 0x444444;
         
         framebuffer.set_current_color(orbit_color);
         
-        // Dibujar la órbita completa
         for i in 0..orbit_steps {
             let angle = (i as f32 / orbit_steps as f32) * 2.0 * PI;
             let orbit_point = Vec3::new(
@@ -84,7 +82,6 @@ impl Planet {
             let screen_pos = camera.world_to_screen(&orbit_point, width, height);
             let next_screen_pos = camera.world_to_screen(&next_orbit_point, width, height);
             
-            // Dibujar línea entre puntos consecutivos
             draw_line(
                 framebuffer,
                 screen_pos.x as i32, screen_pos.y as i32,
@@ -95,7 +92,6 @@ impl Planet {
     }
 }
 
-// Función auxiliar para dibujar líneas (algoritmo de Bresenham)
 fn draw_line(framebuffer: &mut Framebuffer, mut x1: i32, mut y1: i32, mut x2: i32, mut y2: i32, depth: f32) {
     let dx = (x2 - x1).abs();
     let dy = -(y2 - y1).abs();
@@ -154,12 +150,10 @@ impl SolarSystem {
         let width = framebuffer.width as f32;
         let height = framebuffer.height as f32;
 
-        // Primero dibujamos todas las órbitas
         for planet in &self.planets {
             planet.draw_orbit(framebuffer, camera, width, height);
         }
 
-        // Luego dibujamos el sol y los planetas
         framebuffer.set_current_color(self.sun.color);
         self.sun.draw(framebuffer, camera, width, height);
 

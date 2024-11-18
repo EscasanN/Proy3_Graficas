@@ -18,7 +18,6 @@ impl Camera {
         let right = front.cross(&up).normalize();
         let up = right.cross(&front).normalize();
         
-        // Calcular yaw y pitch iniciales
         let yaw = front.z.atan2(front.x);
         let pitch = (-front.y).asin();
 
@@ -46,33 +45,25 @@ impl Camera {
         self.has_changed = true;
     }
 
-    // Simplificamos la conversión de mundo a pantalla para mantener la visualización 2D
     pub fn world_to_screen(&self, world_pos: &Vec3, width: f32, height: f32) -> Vec3 {
-        // Calculamos la posición relativa a la cámara
         let relative_pos = world_pos - self.position;
         
-        // Proyectamos el punto en el plano de la cámara
         let forward = self.front.normalize();
         let right = self.right.normalize();
         let up = self.up.normalize();
         
-        // Calculamos las coordenadas en el espacio de la cámara
         let right_proj = relative_pos.dot(&right);
         let up_proj = relative_pos.dot(&up);
         let forward_proj = relative_pos.dot(&forward);
         
-        // Solo proyectamos si el punto está frente a la cámara
         if forward_proj > 0.0 {
-            // Aplicamos una perspectiva simple
             let scale = self.zoom_factor / forward_proj;
-            
-            // Convertimos a coordenadas de pantalla
+
             let screen_x = width / 2.0 + right_proj * scale * width / 2.0;
             let screen_y = height / 2.0 - up_proj * scale * height / 2.0;
             
             Vec3::new(screen_x, screen_y, forward_proj)
         } else {
-            // Si el punto está detrás de la cámara, lo colocamos fuera de la pantalla
             Vec3::new(-1.0, -1.0, forward_proj)
         }
     }
@@ -96,7 +87,6 @@ impl Camera {
         self.yaw += yaw_delta;
         self.pitch += pitch_delta;
 
-        // Limitar el pitch
         self.pitch = self.pitch.clamp(-PI / 2.0 + 0.1, PI / 2.0 - 0.1);
 
         self.update_camera_vectors();
